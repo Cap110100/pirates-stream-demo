@@ -26,18 +26,17 @@ This mini-project demonstrates a small streaming ETL:
 5. Debugging distributed system connectivity
 
 ### Architecture Overview
-Producer (local Python script)
+Producer (local Python script)\
         │
         ▼
-Kafka (Docker)
+Kafka (Docker container)\
         │
         ▼
-ETL Consumer
-(Docker → later deployed to Kubernetes)
+ETL Consumer (Docker → later deployed to Kubernetes)
         │
-        ├──► PostgreSQL (structured data)
+        ├──► PostgreSQL (structured analytics data)
         │
-        └──► MinIO (raw event storage)
+        └──► MinIO (raw event storage / S3-style storage)
         
 | Component        | Technology |
 | ---------------- | ---------- |
@@ -49,6 +48,25 @@ ETL Consumer
 | Orchestration    | Kubernetes |
 | Debugging UI     | Kafka UI   |
 
+### Data Flow
+- The producer script generates simulated pitch events.
+- Events are published to the Kafka topic player-events.
+- The ETL consumer reads events from Kafka.
+- The ETL performs validation and transformation.
+- Processed data is stored in:\
+  PostgreSQL for structured analytics\
+  MinIO for raw event archival.
+
+### Deployment Phases
+
+**This project was implemented in two stages:**
+
+**Phase 1** — Local Docker Deployment
+- All services were run locally using Docker Compose.
+
+**Phase 2** — Hybrid Deployment
+- Kafka, PostgreSQL, and MinIO remained in Docker.
+- The ETL consumer was deployed to Kubernetes, simulating a production-like architecture where application services run in container orchestration platforms.
 
 ### 1 — Run everything locally with Docker Compose
 This is the fastest way to run the whole system on a single machine.
